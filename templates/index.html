@@ -1,0 +1,41 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>News Sentiment Dashboard</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f4f4f4; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; border: 1px solid #ccc; text-align: left; }
+        th { background: #333; color: #fff; }
+        .positive { color: green; }
+        .negative { color: red; }
+        .neutral { color: gray; }
+    </style>
+</head>
+<body>
+    <h1>Top News Sentiment (PH)</h1>
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Sentiment</th>
+        </tr>
+        {% for article in results %}
+        <tr>
+            <td>{{ article.title }}</td>
+            <td>{{ article.description }}</td>
+            <td>
+                {% if article.sentiment > 0 %}
+                    <span class="positive">Positive ({{ article.sentiment }})</span>
+                {% elif article.sentiment < 0 %}
+                    <span class="negative">Negative ({{ article.sentiment }})</span>
+                {% else %}
+                    <span class="neutral">Neutral (0)</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
