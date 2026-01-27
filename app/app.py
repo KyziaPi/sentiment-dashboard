@@ -1,9 +1,12 @@
 # app/app.py
 from flask import Flask, render_template
+import os
 from fetch_api import get_data
 from analyze import analyze_text
 
-app = Flask(__name__)
+# specify template folder relative to this file
+template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../templates'))
+app = Flask(__name__, template_folder=template_dir)
 
 @app.route("/")
 def index():
