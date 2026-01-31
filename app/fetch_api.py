@@ -8,7 +8,7 @@ load_dotenv()
 API_KEY = os.getenv("API_KEY")
 
 def get_data():
-    url = f"https://newsapi.org/v2/top-headlines?country=us&apiKey={API_KEY}"
+    url = f"https://newsapi.org/v2/top-headlines?country=us&apiKey=f1e93a00eb0c4ce3893b595a784a1f30"
     try:
         response = requests.get(url)
         response.raise_for_status()
