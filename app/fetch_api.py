@@ -1,22 +1,53 @@
 # app/fetch_api.py
-import os
 import requests
-from dotenv import load_dotenv
 
-load_dotenv()
+GNEWS_API_KEY = "39233749dff0f4e7fd41998ceb7f4838"
+BASE_URL = "https://gnews.io/api/v4/top-headlines"
 
-API_KEY = os.getenv("API_KEY")
 
-def get_data():
-    url = f"https://newsapi.org/v2/top-headlines?country=us&apiKey=f1e93a00eb0c4ce3893b595a784a1f30"
+def get_news(country="us", max_articles=10, query=None, from_date=None, to_date=None):
+    params = {
+        "token": GNEWS_API_KEY,
+        "lang": "en",
+        "country": country,
+        "max": max_articles,
+        "q": query,
+    }
+    
+    if from_date:
+        params["from"] = from_date
+    if to_date:
+        params["to"] = to_date
+
     try:
-        response = requests.get(url)
+        response = requests.get(BASE_URL, params=params, timeout=5)
+        # raise exception for bad HTTP codes
         response.raise_for_status()
-        print("Status code:", response.status_code)
-        articles = response.json().get("articles", [])
-        print("Articles fetched:", len(articles))
-        return articles[:10]
-    except requests.exceptions.RequestException as e:
-        print("Error fetching data:", e)
+        data = response.json()
+
+        if "articles" not in data:
+            return []
+
+        articles = []
+        for a in data.get("articles", []):
+            articles.append({
+                "title": a.get("title", ""),
+                "description": a.get("description", ""),
+                "url": a.get("url", ""),
+                "source": a.get("source", {}).get("name", "")
+            })
+
+        return articles
+
+    except requests.exceptions.HTTPError as e:
+        if response.status_code == 429:
+            print("GNews API daily limit reached!")
+        else:
+            print(f"HTTP error: {e}")
         return []
 
+    except requests.exceptions.RequestException as e:
+        # network error, DNS, timeout, etc
+        print(f"Network/API error: {e}")
+        return []
+    

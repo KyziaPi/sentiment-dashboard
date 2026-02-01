@@ -34,8 +34,10 @@
         <option value="gb">United Kingdom</option>
         <option value="au">Australia</option>
         <option value="ca">Canada</option>
-        <option value="jp">Japan</option>
         <option value="de">Germany</option>
+        <option value="ie">Ireland</option>
+        <option value="sg">Singapore</option>
+        <option value="in">India</option>
     </select>
 
     <label for="category">Category:</label>
@@ -50,7 +52,15 @@
         <option value="technology">Technology</option>
     </select>
 
-    <button type="submit">Search</button>
+    
+    <label>From:</label>
+    <input type="datetime-local" name="from_date" />
+
+    <label>To:</label>
+    <input type="datetime-local" name="to_date" />
+
+
+    <button type="submit">Fetch News</button>
 </form>
 
     <!-- NEWS RESULT TABLE -->
