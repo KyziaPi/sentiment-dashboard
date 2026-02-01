@@ -14,7 +14,46 @@
     </style>
 </head>
 <body>
-    <h1>Top News Sentiment (PH)</h1>
+    <h1>Top News Sentiment ({{ request.args.get('country', 'us').upper() }})</h1>
+    
+<!-- UI UPDATE -->
+<form method="GET" action="/">
+    <label for="q">Search:</label>
+    <input
+        type="text"
+        id="q"
+        name="q"
+        placeholder="e.g. economy, elections, AI"
+        value="{{ request.args.get('q', '') }}"
+    >
+
+    <label for="country">Country:</label>
+    <select id="country" name="country">
+        <option value="us">United States</option>
+        <option value="ph">Philippines</option>
+        <option value="gb">United Kingdom</option>
+        <option value="au">Australia</option>
+        <option value="ca">Canada</option>
+        <option value="jp">Japan</option>
+        <option value="de">Germany</option>
+    </select>
+
+    <label for="category">Category:</label>
+    <select id="category" name="category">
+        <option value="">All</option>
+        <option value="business">Business</option>
+        <option value="entertainment">Entertainment</option>
+        <option value="general">General</option>
+        <option value="health">Health</option>
+        <option value="science">Science</option>
+        <option value="sports">Sports</option>
+        <option value="technology">Technology</option>
+    </select>
+
+    <button type="submit">Search</button>
+</form>
+
+    <!-- NEWS RESULT TABLE -->
     <table>
         <tr>
             <th>Title</th>
