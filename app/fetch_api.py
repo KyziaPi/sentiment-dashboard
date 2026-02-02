@@ -22,7 +22,7 @@ def get_news(country="ph", max_articles=10, query=None, category=None, from_date
     else:
         url = "https://gnews.io/api/v4/top-headlines"
         if cat_clean:
-		params["category"] = cat_clean
+	    params["category"] = cat_clean
 
     if from_date: params["from"] = from_date
     if to_date:   params["to"] = to_date
