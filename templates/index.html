@@ -562,12 +562,6 @@
             categorySelect.value = '';
             fromDateInput.value = '';
             toDateInput.value = '';
-            
-            // Hide active filters
-            activeFiltersDiv.classList.remove('show');
-            
-            // Submit form to reload with defaults
-            searchForm.submit();
         });
 
         // Show active filters on page load
@@ -579,7 +573,7 @@
             const toDate = toDateInput.value;
 
             // Check if any filters are active
-            const hasFilters = keyword || category || fromDate || toDate;
+            const hasFilters = keyword || country || category || fromDate || toDate;
 
             if (hasFilters) {
                 activeFiltersDiv.classList.add('show');

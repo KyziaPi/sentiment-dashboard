@@ -11,7 +11,7 @@ def get_news(country="us", max_articles=10, query=None, category=None, from_date
     params = {
         "token": GNEWS_API_KEY,
         "lang": "en",
-        "country": country if country else "us",
+        "country": country if country else "ph",
         "max": max_articles,
     }
 

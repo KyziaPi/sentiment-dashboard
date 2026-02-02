@@ -19,7 +19,7 @@ def index():
     # --- FIX: grab from browser ---
     query = request.args.get("q", "")           
     category = request.args.get("category", "") 
-    country = request.args.get("country", "us")
+    country = request.args.get("country", "ph")
     
     from_date = to_iso8601_z(request.args.get("from_date"))
     to_date   = to_iso8601_z(request.args.get("to_date"))
