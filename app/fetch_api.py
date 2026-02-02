@@ -4,7 +4,7 @@ from textblob import TextBlob
 
 GNEWS_API_KEY = "42c2e0c4a28110fd8c679a8bbc15ac21"
 
-def get_news(country="us", max_articles=10, query=None, category=None, from_date=None, to_date=None):
+def get_news(country="ph", max_articles=10, query=None, category=None, from_date=None, to_date=None):
     q_clean = query.strip() if query and query.strip() else None
     cat_clean = category.strip() if category and category.strip() else None
     
@@ -21,7 +21,8 @@ def get_news(country="us", max_articles=10, query=None, category=None, from_date
         params["q"] = f'"{q_clean}" {cat_clean}' if cat_clean else q_clean
     else:
         url = "https://gnews.io/api/v4/top-headlines"
-        params["category"] = cat_clean if cat_clean else "general"
+        if cat_clean:
+		params["category"] = cat_clean
 
     if from_date: params["from"] = from_date
     if to_date:   params["to"] = to_date
