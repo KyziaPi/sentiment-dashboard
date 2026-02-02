@@ -15,13 +15,11 @@ def get_news(country="ph", max_articles=10, query=None, category=None, from_date
         "max": max_articles,
     }
 
+    url = "https://gnews.io/api/v4/top-headlines"
+
     if q_clean:
-        url = "https://gnews.io/api/v4/search"
-        # Search endpoint ignores 'category' merge into search string
-        params["q"] = f'"{q_clean}" {cat_clean}' if cat_clean else q_clean
-    else:
-        url = "https://gnews.io/api/v4/top-headlines"
-        if cat_clean:
+        params["q"] = f"{q_clean}"
+    if cat_clean:
             params["category"] = cat_clean
 
     if from_date: params["from"] = from_date
