@@ -5,34 +5,38 @@ from fetch_api import get_news
 from analyze import analyze_text
 from datetime import datetime
 
-# specify template folder relative to this file
 template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../templates'))
 app = Flask(__name__, template_folder=template_dir)
 
-# helper to convert frontend datetime-local to ISO 8601 with Z
 def to_iso8601_z(dt_str):
-    """
-    Convert datetime-local string (YYYY-MM-DDTHH:MM) to ISO 8601 with Z
-    """
     if not dt_str:
         return None
-    # add seconds if missing, then append Z
     dt = datetime.fromisoformat(dt_str)
     return dt.isoformat(timespec='seconds') + "Z"
 
-
 @app.route("/", methods=["GET"])
 def index():
+    # --- FIX: grab from browser ---
+    query = request.args.get("q", "")           
+    category = request.args.get("category", "") 
     country = request.args.get("country", "us")
+    
     from_date = to_iso8601_z(request.args.get("from_date"))
     to_date   = to_iso8601_z(request.args.get("to_date"))
 
-    articles = get_news(country=country, from_date=from_date, to_date=to_date)
+    # --- FIX: Passing query and category into the function ---
+    articles = get_news(
+        query=query, 
+        category=category, 
+        country=country, 
+        from_date=from_date, 
+        to_date=to_date
+    )
 
     results = []
     for article in articles:
         title = article.get("title", "")
-        sentiment = analyze_text(title)
+        sentiment = article.get("sentiment", 0) 
         results.append({
             "title": title,
             "description": article.get("description", ""),
@@ -43,7 +47,5 @@ def index():
 
     return render_template("index.html", results=results, country=country)
 
-
 if __name__ == "__main__":
     app.run(debug=True)
-

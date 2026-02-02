@@ -1,53 +1,53 @@
 # app/fetch_api.py
 import requests
+from textblob import TextBlob
 
 GNEWS_API_KEY = "39233749dff0f4e7fd41998ceb7f4838"
-BASE_URL = "https://gnews.io/api/v4/top-headlines"
 
-
-def get_news(country="us", max_articles=10, query=None, from_date=None, to_date=None):
+def get_news(country="us", max_articles=10, query=None, category=None, from_date=None, to_date=None):
+    q_clean = query.strip() if query and query.strip() else None
+    cat_clean = category.strip() if category and category.strip() else None
+    
     params = {
         "token": GNEWS_API_KEY,
         "lang": "en",
-        "country": country,
+        "country": country if country else "us",
         "max": max_articles,
-        "q": query,
     }
-    
-    if from_date:
-        params["from"] = from_date
-    if to_date:
-        params["to"] = to_date
+
+    if q_clean:
+        url = "https://gnews.io/api/v4/search"
+        # Search endpoint ignores 'category' merge into search string
+        params["q"] = f'"{q_clean}" {cat_clean}' if cat_clean else q_clean
+    else:
+        url = "https://gnews.io/api/v4/top-headlines"
+        params["category"] = cat_clean if cat_clean else "general"
+
+    if from_date: params["from"] = from_date
+    if to_date:   params["to"] = to_date
 
     try:
-        response = requests.get(BASE_URL, params=params, timeout=5)
-        # raise exception for bad HTTP codes
+        print(f"\n--- ATTEMPTING FETCH ---")
+        print(f"URL: {url}")
+        print(f"Final Params: {params}")
+        
+        response = requests.get(url, params=params, timeout=10)
         response.raise_for_status()
         data = response.json()
 
-        if "articles" not in data:
-            return []
-
         articles = []
         for a in data.get("articles", []):
+            text = f"{a.get('title', '')} {a.get('description', '')}"
+            score = round(TextBlob(text).sentiment.polarity, 2)
             articles.append({
                 "title": a.get("title", ""),
                 "description": a.get("description", ""),
                 "url": a.get("url", ""),
-                "source": a.get("source", {}).get("name", "")
+                "source": a.get("source", {}).get("name", ""),
+                "sentiment": score
             })
-
+        print(f"Success: Found {len(articles)} articles.")
         return articles
-
-    except requests.exceptions.HTTPError as e:
-        if response.status_code == 429:
-            print("GNews API daily limit reached!")
-        else:
-            print(f"HTTP error: {e}")
+    except Exception as e:
+        print(f"API Error: {e}")
         return []
-
-    except requests.exceptions.RequestException as e:
-        # network error, DNS, timeout, etc
-        print(f"Network/API error: {e}")
-        return []
-    

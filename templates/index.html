@@ -1,4 +1,3 @@
-<!-- templates/index.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,12 +10,14 @@
         .positive { color: green; }
         .negative { color: red; }
         .neutral { color: gray; }
+        form { margin-bottom: 20px; background: #fff; padding: 15px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        label { font-weight: bold; margin-right: 5px; }
+        select, input { margin-right: 15px; padding: 5px; }
     </style>
 </head>
 <body>
-    <h1>Top News Sentiment ({{ request.args.get('country', 'us').upper() }})</h1>
+    <h1>Top News Sentiment ({{ request.args.get('country', 'ph').upper() }})</h1>
     
-<!-- UI UPDATE -->
 <form method="GET" action="/">
     <label for="q">Search:</label>
     <input
@@ -29,41 +30,37 @@
 
     <label for="country">Country:</label>
     <select id="country" name="country">
-        <option value="us">United States</option>
-        <option value="ph">Philippines</option>
-        <option value="gb">United Kingdom</option>
-        <option value="au">Australia</option>
-        <option value="ca">Canada</option>
-        <option value="de">Germany</option>
-        <option value="ie">Ireland</option>
-        <option value="sg">Singapore</option>
-        <option value="in">India</option>
+        <option value="ph" {% if request.args.get('country') == 'ph' or not request.args.get('country') %}selected{% endif %}>Philippines</option>
+        <option value="us" {% if request.args.get('country') == 'us' %}selected{% endif %}>United States</option>
+        <option value="gb" {% if request.args.get('country') == 'gb' %}selected{% endif %}>United Kingdom</option>
+        <option value="au" {% if request.args.get('country') == 'au' %}selected{% endif %}>Australia</option>
+        <option value="ca" {% if request.args.get('country') == 'ca' %}selected{% endif %}>Canada</option>
+        <option value="ie" {% if request.args.get('country') == 'ie' %}selected{% endif %}>Ireland</option>
+        <option value="sg" {% if request.args.get('country') == 'sg' %}selected{% endif %}>Singapore</option>
+        <option value="in" {% if request.args.get('country') == 'in' %}selected{% endif %}>India</option>
     </select>
 
     <label for="category">Category:</label>
     <select id="category" name="category">
-        <option value="">All</option>
-        <option value="business">Business</option>
-        <option value="entertainment">Entertainment</option>
-        <option value="general">General</option>
-        <option value="health">Health</option>
-        <option value="science">Science</option>
-        <option value="sports">Sports</option>
-        <option value="technology">Technology</option>
+        <option value="" {% if not request.args.get('category') %}selected{% endif %}>All</option>
+        <option value="business" {% if request.args.get('category') == 'business' %}selected{% endif %}>Business</option>
+        <option value="entertainment" {% if request.args.get('category') == 'entertainment' %}selected{% endif %}>Entertainment</option>
+        <option value="general" {% if request.args.get('category') == 'general' %}selected{% endif %}>General</option>
+        <option value="health" {% if request.args.get('category') == 'health' %}selected{% endif %}>Health</option>
+        <option value="science" {% if request.args.get('category') == 'science' %}selected{% endif %}>Science</option>
+        <option value="sports" {% if request.args.get('category') == 'sports' %}selected{% endif %}>Sports</option>
+        <option value="technology" {% if request.args.get('category') == 'technology' %}selected{% endif %}>Technology</option>
     </select>
 
-    
     <label>From:</label>
-    <input type="datetime-local" name="from_date" />
+    <input type="datetime-local" name="from_date" value="{{ request.args.get('from_date', '') }}" />
 
     <label>To:</label>
-    <input type="datetime-local" name="to_date" />
-
+    <input type="datetime-local" name="to_date" value="{{ request.args.get('to_date', '') }}" />
 
     <button type="submit">Fetch News</button>
 </form>
 
-    <!-- NEWS RESULT TABLE -->
     <table>
         <tr>
             <th>Title</th>
