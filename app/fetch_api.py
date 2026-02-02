@@ -2,7 +2,7 @@
 import requests
 from textblob import TextBlob
 
-GNEWS_API_KEY = "39233749dff0f4e7fd41998ceb7f4838"
+GNEWS_API_KEY = "42c2e0c4a28110fd8c679a8bbc15ac21"
 
 def get_news(country="us", max_articles=10, query=None, category=None, from_date=None, to_date=None):
     q_clean = query.strip() if query and query.strip() else None
